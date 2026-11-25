@@ -1,13 +1,4 @@
-"""
-ShopAssist cost-optimization demo: before vs. after, in the terminal.
 
-    python demo.py            # everything, baseline Q2 measured live (~3 min first build)
-    python demo.py --quick    # skip the slow Q2 baseline run, use its recorded numbers
-    python demo.py --section q1|prompts|q2|recall
-
-Every "after" number is measured live. Baselines are the untouched original
-agents in baseline/.
-"""
 from __future__ import annotations
 
 import argparse

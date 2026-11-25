@@ -183,21 +183,8 @@ The first run of this test found **216 misses** that the public tickets never hi
 - **A tighter retrieval cut-off.** Raising the cut-off from 0.6 to 0.7 or more would send one policy in more cases, but the recall sweep drops to 1,008 / 1,152 (144 misses, all subscriptions that also carry `license_revealed`, where the digital-license policy crowds out the subscription policy that actually governs). The saving would be about 75 points on the public set, so 0.6 stays.
 - **Replacing the customer's message with a code-extracted intent label.** That saves about 25 tokens, but the model would then draft the reply blind to what the customer actually wrote. Not worth 75 points.
 
-## 6. Production notes (beyond what the simulator measures)
 
-- **Output is now the main cost (55%)**, and on a real API it can be cut further. Use structured outputs / a JSON-schema response format plus a `max_tokens` cap of about 60, or have the model return only `{action, kb_article}` and render `customer_reply` from per-action templates in code. That drops output from about 40 to about 15 tokens, about −375 points per ticket, which would take Q1 to about 91.7% and Q2 to about 99%. The simulator always emits the reply, so this isn't claimed in the numbers above.
-- **Less chain of thought is a real trade-off on hard tickets.** The mitigations are explicit, structured facts, narrowed policy choice, and a grounding audit that escalates when the answer is unsupported. If accuracy dropped on messier traffic, the better pattern is a cascade, with a reasoning call only for low-confidence or audit-failed tickets, rather than paying for reasoning on every ticket.
-- **Volume levers** if traffic grows: batch APIs (typically about 50% off for non-urgent tickets) and a semantic cache keyed on the decision-relevant fact signature, so repeat situations skip the model for the decision.
 
-## Limitations (stated openly)
-
-- **The escalation default citation is inferred, not documented.** The help-center articles do not say which article to cite when escalating because no policy applies. The convention (cite `returns-within-30-days`) was inferred from the expected outcomes and encoded as a house rule. It affects none of the public tickets; it only matters for unseen edge cases such as a damaged item reported after day 7.
-- **Triage query terms are hand-picked for this five-article corpus.** For a real help center with hundreds of articles, the term lists would be replaced by learned retrieval (embeddings or BM25 with field boosts) evaluated with the same recall-sweep methodology.
-- **All numbers come from the provided simulator.** It decides from the order snapshot, so prompt changes affect only cost there. Against a real model, the compact prompt and the grounding audit would need re-validation on a labeled ticket set.
-
-## Demo
-
-`python demo.py` prints a colored before/after report: billing rule, per-ticket savings bars, the T-1001 per-call breakdown, the actual prompts side by side with annotations, the Q2 node-by-node table for T-1004 and T-1003, correctness on all five tickets, and the 1,152-case recall check. The untouched original agents live in `baseline/` so the "before" numbers are measured live. `--quick` uses recorded Q2 baseline numbers to skip the 2–3 minute help-center build; `--section q1|prompts|q2|recall|summary` runs one part; `--slow` adds pauses for screen recording.
 
 ## How to run
 

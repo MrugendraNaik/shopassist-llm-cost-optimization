@@ -1,6 +1,6 @@
 # ShopAssist — support copilot cost lab
 
-See SOLUTION.md for my solution
+> **My solution:** see [SOLUTION.md](SOLUTION.md) for the write-up, results and per-call breakdowns.
 
 **ShopAssist** is a Tier-1 support agent for an e-commerce company. For each ticket it:
 

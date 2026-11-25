@@ -1,5 +1,7 @@
 # ShopAssist — support copilot cost lab
 
+See SOLUTION.md for my solution
+
 **ShopAssist** is a Tier-1 support agent for an e-commerce company. For each ticket it:
 
 1. Reads the customer thread (`data/tickets/`)
